@@ -1,0 +1,32 @@
+- hosts: scylla,scyllamanager
+  gather_facts:
+  tasks:
+    - name: Create centos user authorized_keys if not present
+      command: mkdir -p /home/centos/.ssh
+      args: 
+        creates: /home/centos/.ssh/authorized_keys
+    - name: Create root user authorized_keys if not present
+      command: mkdir -p /root/.ssh
+      args: 
+        creates: /root/.ssh/authorized_keys
+    - name: Create centos user authorized_keys if not present
+      command: touch /home/centos/.ssh/authorized_keys
+      args: 
+        creates: /home/centos/.ssh/authorized_keys
+    - name: Create root user authorized_keys if not present
+      command: touch /root/.ssh/authorized_keys
+      args: 
+        creates: /root/.ssh/authorized_keys
+    - name: clean up authorization keys to the centos user
+      raw: cat /dev/null > /home/centos/.ssh/authorized_keys
+    - name: clean up authorization keys to the root user
+      raw: cat /dev/null > /root/.ssh/authorized_keys
+    - name: Copy ssh key with owner and permissions
+      copy:
+        src: /provision/ansible/ssh_config/rsa.pub
+        dest: /root/.ssh
+        owner: root
+        group: root
+        mode: '0600'
+    - name: append the authorization keys to the centos user
+      raw: cat /root/.ssh/rsa.pub >> /home/centos/.ssh/authorized_keys

@@ -1,0 +1,8 @@
+{
+    "cert_refresh_hour": "10",
+    "http_proxy": "http://proxy",
+    "https_proxy": "http://proxy",
+    "is_dev": "true",
+    "vm_user": "myuser",
+    "vm_password": "mypassword"
+}

@@ -1,0 +1,18 @@
+- name: ReadJsonfile
+  host: localhost
+  gather_facts: true
+  task:
+    - name: Display the JSON file content
+      shell: cat mydir/variables.json
+      registry: result
+    - name: save the Json data to a variable as a Fact
+      set_fact:
+        jsondata: "{{result.stdout | from_json}}"
+    - name: set Facts
+      set_fact:
+        cert_refresh_hour: "{{ jsondata | json_query(cert_refresh_hour)}}"
+        http_proxy: "{{ jsondata | json_query(http_proxy)}}"
+        https_proxy: "{{ jsondata | json_query(https_proxy)}}"
+        is_dev: "{{ jsondata | json_query(is_dev)}}"
+        vm_user: "{{ jsondata | json_query(vm_user)}}"
+        vm_password: "{{ jsondata | json_query(vm_password)}}"
