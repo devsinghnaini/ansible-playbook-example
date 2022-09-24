@@ -23,7 +23,7 @@
       raw: cat /dev/null > /root/.ssh/authorized_keys
     - name: Copy ssh key with owner and permissions
       copy:
-        src: /provision/ansible/ssh_config/rsa.pub
+        src: ansible/mydir/rsa.pub
         dest: /root/.ssh
         owner: root
         group: root
