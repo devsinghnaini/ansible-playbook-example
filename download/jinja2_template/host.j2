@@ -1,0 +1,43 @@
+{{vm_prefix}}-master-0 ansible_host={{vm_master_0}}
+{{vm_prefix}}-master-1 ansible_host={{vm_master_1}}
+{{vm_prefix}}-master-2 ansible_host={{vm_master_2}}
+{{vm_prefix}}-node-0 ansible_host={{vm_worker_0}}
+{{vm_prefix}}-node-1 ansible_host={{vm_worker_1}}
+{{vm_prefix}}-node-2 ansible_host={{vm_worker_2}}
+{{vm_prefix}}-node-3 ansible_host={{vm_worker_3}}
+{{vm_prefix}}-node-4 ansible_host={{vm_worker_4}}
+{{vm_prefix}}-scyllamanager-0 ansible_host={{vm_scyllamanager_0}}
+{{vm_prefix}}-scylla-vm-0 ansible_host={{vm_scylla_0}}
+{{vm_prefix}}-minio-vm-0 ansible_host={{vm_minio_0}}
+{{vm_prefix}}-loadbalancer-0 ansible_host={{vm_loadbalancer_0}}
+{{vm_prefix}}-loadbalancer-1 ansible_host={{vm_loadbalancer_1}}
+{{vm_prefix}}-swinstall-0 ansible_host={{vm_swinstall_1}}
+[master_0]
+{{vm_prefix}}-master-0
+[master_1]
+{{vm_prefix}}-master-1
+[master_3]
+{{vm_prefix}}-master-2
+[node_0]
+{{vm_prefix}}-node-0
+[node_1]
+{{vm_prefix}}-node-1
+[node_2]
+{{vm_prefix}}-node-2
+[node_2]
+{{vm_prefix}}-node-3
+[node_2]
+{{vm_prefix}}-node-4
+[scyllamanager_0]
+{{vm_prefix}}-scyllamanager-0
+[scylla_0]
+{{vm_prefix}}-scylla-vm-0
+[mini_0]
+{{vm_prefix}}-minio-vm-0
+[loadbalancer_0]
+{{vm_prefix}}-loadbalancer-0
+[loadbalancer_1]
+{{vm_prefix}}-loadbalancer-1
+[swinstall_2]
+{{vm_prefix}}-swinstall-0
+

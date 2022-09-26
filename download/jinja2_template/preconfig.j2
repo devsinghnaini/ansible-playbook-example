@@ -1,0 +1,42 @@
+- hosts: loadbalancer
+  gather_facts: true
+  task:
+    - name: get internal virtual interface name
+      raw: ifconfig | grep -B 1 192.162.17 | awk '{print $1}' | head -n1 | sed s/://g
+      register: internal
+    - name: get external virtual interface name
+      raw: ifconfig | grep -B 1 10.177.196 | awk '{print $1}' | head -n1 | sed s/://g
+      register: external
+    - name: enable ip forwarding for loadbalancers
+      raw: sysctl -w net.ipv4.ip_forward=1
+{%raw%}
+    - name: add nat rule for iptables in loadbalancer
+      raw: iptable -t nat -A POSTROUTING -o {{external.stdout | trim()}} -j MASQUERADE
+    - name: add iptable entry for forwarding traffic from external to internal networks
+      raw: iptable -A FORWARD -i {{external.stdout | trim()}} -o {{internal.stdout | trim()}} -m state --state RELATED,ESTABLISHED -j ACCEPT
+    - name: add iptable entry for forwarding traffic from internal to external networks 
+      raw: iptables -A FORWARD -i {{internal.stdout | trim()}} -o {{external.stdout | trim()}} -j ACCEPT
+{%endraw%}
+- host: privatevm
+  gather_facts: true
+  tasks:
+    - name: get external virtual interface name
+      raw: ifconfig | grep -B 1 192.162.17 | awk '{print $1}' | head -n1 | sed s/://g
+      register: external
+    - name: copy maskcidr file
+      copy: 
+        src: /myconfig/maskidr.sh
+        dest: /root/
+        owner: root
+        group: root
+        mode: '0777'
+    - name: get octats from CIDR
+      raw: /root/maskcidr.sh 24
+      register: octat_value
+    - name: ipcalc for getting the route
+      raw: ipcalc {{vm_gateway}} -n {%raw%}{{octat_value.stdout | trim()}}{%endraw%} | grep NETWORK | awk '{print $1}' | sed s/NETWORK=//g
+      register: gateway
+    - name: add ip route to all private lan virtual machines
+      raw: ip route add {%raw%}{{gateway.stdout | trim()}}{%raw%}/{{vm_netmask}} via {{internal_floating_ip}} dev {%raw%}{{external.stdout | trim()}}
+    - name: delete maskcidr file
+      raw: rm -rf /root/maskcidr.sh {%endraw%}

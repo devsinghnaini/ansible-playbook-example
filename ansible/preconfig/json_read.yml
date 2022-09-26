@@ -16,3 +16,25 @@
         is_dev: "{{ jsondata | json_query(is_dev)}}"
         vm_user: "{{ jsondata | json_query(vm_user)}}"
         vm_password: "{{ jsondata | json_query(vm_password)}}"
+      vars:
+        cert_refresh_hour: "cert_refresh_hour"
+        http_proxy: "http_proxy"
+        https_proxy: "https_proxy"
+        is_dev: "is_dev"
+        vm_user: "vm_user"
+        vm_password: "vm_password"
+    - name: Remove folder converted
+      shell: rm -rf converted/
+    - name: Create folder converted
+      command: mkdir -p converted/
+      args: 
+        creates: converted/
+    - name: Create Preconfig playbook dynamically
+      template:
+         src: downlaod/preconfig.j2
+         dest: converted/preconfig.yaml
+    - name: Create host inventory dynamically
+      template:
+         src: downlaod/all_hosts.j2
+         dest: converted/all_hosts.ini
+                
